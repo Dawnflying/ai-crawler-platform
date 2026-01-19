@@ -59,6 +59,23 @@ const TaskDetail: React.FC = () => {
     }
   };
 
+  const handleExecute = async () => {
+    if (!task || !id) return;
+
+    const hide = message.loading('正在执行任务...', 0);
+    try {
+      const result = await taskApi.execute(parseInt(id));
+      hide();
+      message.success(`任务执行成功！爬取 ${result.total_items} 条数据，成功 ${result.success_items} 条`);
+      // 刷新任务信息
+      fetchTask(parseInt(id));
+      fetchLogs(parseInt(id));
+    } catch (error) {
+      hide();
+      console.error('Failed to execute task:', error);
+    }
+  };
+
   if (loading) {
     return <Spin size="large" style={{ display: 'flex', justifyContent: 'center', marginTop: 100 }} />;
   }
@@ -109,7 +126,25 @@ const TaskDetail: React.FC = () => {
     <Space direction="vertical" size="large" style={{ width: '100%' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Title level={2}>{task.name}</Title>
-        <Button onClick={() => navigate('/tasks')}>返回列表</Button>
+        <Space>
+          {task.status === 'pending' && (
+            <Button
+              type="primary"
+              onClick={handleExecute}
+            >
+              立即执行
+            </Button>
+          )}
+          {task.status === 'failed' && (
+            <Button
+              type="primary"
+              onClick={handleExecute}
+            >
+              重新执行
+            </Button>
+          )}
+          <Button onClick={() => navigate('/tasks')}>返回列表</Button>
+        </Space>
       </div>
 
       <Tabs

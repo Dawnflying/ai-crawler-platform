@@ -36,4 +36,9 @@ export const taskApi = {
   cancel: (id: number) => {
     return request.post<any, { message: string }>(`/tasks/${id}/cancel`);
   },
+
+  // Execute task
+  execute: (id: number) => {
+    return request.post<any, { message: string; total_items: number; success_items: number; failed_items: number }>(`/tasks/${id}/execute`);
+  },
 };

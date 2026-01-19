@@ -318,3 +318,50 @@ async def cancel_task(
     db.commit()
 
     return {"message": "Task cancelled successfully"}
+
+
+@router.post("/{task_id}/execute")
+async def execute_task(
+    task_id: int,
+    current_user: User = Depends(check_permission("task:execute")),
+    db: Session = Depends(get_db)
+):
+    """Execute a task immediately"""
+    from app.services.crawler_service import CrawlerService
+
+    task = db.query(Task).filter(Task.id == task_id).first()
+    if not task:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Task not found"
+        )
+
+    if task.status == "running":
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Task is already running"
+        )
+
+    # Execute crawler in background
+    # For now, execute synchronously for testing
+    try:
+        service = CrawlerService(db)
+        result = service.execute_crawler(task_id)
+
+        if result['success']:
+            return {
+                "message": "Task executed successfully",
+                "total_items": result.get('total_items', 0),
+                "success_items": result.get('success_items', 0),
+                "failed_items": result.get('failed_items', 0)
+            }
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=result.get('error', 'Task execution failed')
+            )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
