@@ -65,8 +65,8 @@ docker-compose exec backend python init_db.py
 ```
 
 5. 访问应用
+- 前端界面: http://localhost:3000
 - API 文档: http://localhost:8000/api/docs
-- 前端界面: http://localhost:3000 (待实现)
 
 ### 本地开发
 
@@ -103,13 +103,20 @@ python run.py
 
 API 文档将在 http://localhost:8000/api/docs 可用
 
-#### 前端开发 (待实现)
+#### 前端开发
 
+1. 安装依赖
 ```bash
 cd frontend
 npm install
+```
+
+2. 启动开发服务器
+```bash
 npm run dev
 ```
+
+前端应用将在 http://localhost:3000 可用
 
 ## 默认账号
 
@@ -144,7 +151,18 @@ ai-crawler-platform/
 │   │   └── main.py         # 主应用
 │   ├── requirements.txt    # Python 依赖
 │   └── Dockerfile
-├── frontend/               # 前端代码 (待实现)
+├── frontend/               # 前端代码
+│   ├── src/
+│   │   ├── api/            # API 接口
+│   │   ├── components/     # 公共组件
+│   │   ├── layouts/        # 布局组件
+│   │   ├── pages/          # 页面组件
+│   │   ├── router/         # 路由配置
+│   │   ├── store/          # 状态管理
+│   │   ├── types/          # TypeScript 类型
+│   │   └── utils/          # 工具函数
+│   ├── package.json
+│   └── Dockerfile
 ├── docs/                   # 设计文档
 ├── data/                   # 数据库文件
 ├── logs/                   # 日志文件
@@ -156,6 +174,7 @@ ai-crawler-platform/
 
 ### 已完成 ✅
 
+**后端**
 - [x] 项目基础架构搭建
 - [x] 数据库设计与模型创建
 - [x] 用户认证模块 (注册/登录/权限控制)
@@ -163,20 +182,25 @@ ai-crawler-platform/
 - [x] 任务管理模块 (CRUD API)
 - [x] Docker 配置
 
-### 进行中 🚧
-
-- [ ] 爬虫引擎实现 (HTTP/API/Browser)
-- [ ] 前端项目初始化
-- [ ] 前端页面开发
+**前端**
+- [x] React + TypeScript + Vite 项目搭建
+- [x] 登录/注册页面
+- [x] 主布局和导航
+- [x] Dashboard 控制台
+- [x] 爬虫管理页面（列表、创建、编辑、详情）
+- [x] 任务管理页面（列表、创建、详情、日志）
+- [x] 数据管理页面框架
+- [x] 前端 Docker 配置
 
 ### 待开发 📋
 
+- [ ] 爬虫引擎实现 (HTTP/API/Browser)
 - [ ] Celery 任务调度
 - [ ] WebSocket 实时通信
 - [ ] 数据导出功能
 - [ ] 告警通知
 - [ ] 爬虫模板库
-- [ ] 监控 Dashboard
+- [ ] 完善数据管理功能
 
 ## 参考文档
 

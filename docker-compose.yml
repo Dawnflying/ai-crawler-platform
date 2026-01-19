@@ -60,19 +60,14 @@ services:
         condition: service_healthy
     command: celery -A app.celery_app worker --loglevel=info
 
-  # Frontend (to be added)
-  # frontend:
-  #   build: ./frontend
-  #   container_name: crawler-frontend
-  #   ports:
-  #     - "3000:3000"
-  #   volumes:
-  #     - ./frontend:/app
-  #     - /app/node_modules
-  #   environment:
-  #     - REACT_APP_API_URL=http://localhost:8000/api
-  #   depends_on:
-  #     - backend
+  # Frontend
+  frontend:
+    build: ./frontend
+    container_name: crawler-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
 
 volumes:
   redis_data:
